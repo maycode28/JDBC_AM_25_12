@@ -10,6 +10,8 @@ create table article(
                         `body` text not null
 );
 
+DROP TABLE article;
+
 desc article;
 
 select *

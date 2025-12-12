@@ -79,6 +79,27 @@ public class Main {
                         }
                     }
 
+                }else if (cmd.startsWith("article delete")) {
+                    if(cmd.substring("article delete".length()).trim().isEmpty()){
+                        System.out.println("올바른 명령어를 입력해주세요");
+                        continue;
+                    }
+
+                    String idx = cmd.substring("article delete".length()).trim();
+
+                    String sql = "select * FROM article where id = " + idx+";";
+                    pstmt = conn.prepareStatement(sql);
+                    rs = pstmt.executeQuery();
+                    if (!rs.next()) {
+                        System.out.println("해당하는 게시글 없음");
+                        continue;
+                    }
+                    sql = "DELETE FROM article";
+                    sql += " WHERE id = "+idx+";";
+
+                    pstmt = conn.prepareStatement(sql);
+                    pstmt.executeQuery();
+                    System.out.printf("%s번 게시글이 삭제 되었습니다.\n",idx);
                 }
 
 
