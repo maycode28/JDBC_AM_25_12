@@ -43,7 +43,7 @@ public class Main {
                     sql += "updateDate = NOW(),";
                     sql += "title = '"+title+"',";
                     sql += "`body` = '"+body+"';";
-                    
+
                     pstmt = conn.prepareStatement(sql);
                     pstmt.executeUpdate();
 
