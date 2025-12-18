@@ -5,23 +5,34 @@ import org.example.dao.ArticleDao;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 public class ArticleService {
-    private ArticleDao articleDao = new ArticleDao();
 
-    public boolean isArticleExists(Connection conn, int id) {
-        return articleDao.isArticleExists(conn, id);
+    private ArticleDao articleDao;
+
+    public ArticleService(Connection conn) {
+        this.articleDao = new ArticleDao(conn);
     }
 
-    public void doModify(Connection conn, int id, String title, String body) {
-        articleDao.doModify(conn,id,title, body);
+    public int doWrite(String title, String body,int authorId) {
+        return articleDao.doWrite(title, body,authorId);
+
     }
 
-    public int doWrite(Connection conn, String title, String body) {
-        return articleDao.doWrite(conn,title, body);
+    public List<Article> getArticles() {
+        return articleDao.getArticles();
     }
 
-    public List<Article> showList(Connection conn) {
-        return articleDao.showList(conn);
+    public Map<String, Object> getArticleById(int id) {
+        return articleDao.getArticleById(id);
+    }
+
+    public void doUpdate(int id, String title, String body) {
+        articleDao.doUpdate(id, title, body);
+    }
+
+    public void doDelete(int id) {
+        articleDao.doDelete(id);
     }
 }

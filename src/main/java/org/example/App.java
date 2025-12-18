@@ -1,14 +1,12 @@
 package org.example;
 
 import org.example.controller.ArticleController;
+import org.example.controller.Controller;
 import org.example.controller.MemberController;
-import org.example.util.DBUtil;
-import org.example.util.SecSql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.Scanner;
 
 public class App {
@@ -66,51 +64,57 @@ public class App {
         ArticleController articleController = new ArticleController(sc, conn);
 
         if (cmd.equals("member join")) {
-            return memberController.doJoin();
-        } else if (cmd.equals("article write")) {
-            return articleController.doWrite();
-
-        } else if (cmd.equals("article list")) {
-            return articleController.showList();
-
-        } else if (cmd.startsWith("article modify")) {
-            return articleController.doModify(cmd);
-
-
-        } else if (cmd.startsWith("article detail")) {
-            return articleController.showDetail(cmd);
-
-        } else if (cmd.startsWith("article delete")) {
-
-            int id = 0;
-
-            try {
-                id = Integer.parseInt(cmd.split(" ")[2]);
-            } catch (Exception e) {
-                System.out.println("번호는 정수로 입력해");
+            if (Controller.isLogined()){
+                System.out.println("로그아웃이 필요합니다.");
                 return 0;
             }
-
-            SecSql sql = new SecSql();
-            sql.append("SELECT *");
-            sql.append("FROM article");
-            sql.append("WHERE id = ?;", id);
-
-            Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
-            if (articleMap.isEmpty()) {
-                System.out.println(id + "번 글은 없음");
+            memberController.doJoin();
+        }else if (cmd.equals("member login")) {
+            if (Controller.isLogined()){
+                System.out.println("로그아웃이 필요합니다.");
                 return 0;
             }
-
-            System.out.println("==삭제==");
-            sql = new SecSql();
-            sql.append("DELETE FROM article");
-            sql.append("WHERE id = ?;", id);
-
-            DBUtil.delete(conn, sql);
-
-            System.out.println(id + "번 글이 삭제되었습니다.");
+            memberController.doLogin();
+        } else if (cmd.equals("member logout")) {
+            if (!Controller.isLogined()){
+                System.out.println("로그인이 필요합니다.");
+                return 0;
+            }
+            memberController.doLogout();
+        }else if (cmd.equals("member profile")) {
+            if (!Controller.isLogined()){
+                System.out.println("로그인이 필요합니다.");
+                return 0;
+            }
+            memberController.showProfile();
         }
+        else if (cmd.equals("article write")) {
+            if (!Controller.isLogined()){
+                System.out.println("로그인이 필요합니다.");
+                return 0;
+            }
+            articleController.doWrite();
+        } else if (cmd.equals("article list")) {
+            articleController.showList();
+        } else if (cmd.startsWith("article modify")) {
+            if (!Controller.isLogined()){
+                System.out.println("로그인이 필요합니다.");
+                return 0;
+            }
+            articleController.doModify(cmd);
+        } else if (cmd.startsWith("article detail")) {
+            articleController.showDetail(cmd);
+        } else if (cmd.startsWith("article delete")) {
+            if (!Controller.isLogined()){
+                System.out.println("로그인이 필요합니다.");
+                return 0;
+            }
+            articleController.doDelete(cmd);
+        } else {
+            System.out.println("사용할 수 없는 명령어입니다");
+        }
+
+
         return 0;
     }
 }
