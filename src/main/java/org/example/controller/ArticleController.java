@@ -69,6 +69,10 @@ public class ArticleController {
             System.out.println(id + "번 글은 없어");
             return;
         }
+        if (Controller.loginedMember.getId() != (int)articleMap.get("authorId")) {
+            System.out.println("작성자만 수정할 수 있습니다.");
+            return;
+        }
 
         System.out.println("==수정==");
         System.out.print("새 제목 : ");
@@ -127,6 +131,10 @@ public class ArticleController {
 
         if (articleMap.isEmpty()) {
             System.out.println(id + "번 글은 없어");
+            return;
+        }
+        if (Controller.loginedMember.getId() != (int)articleMap.get("authorId")) {
+            System.out.println("작성자만 삭제할 수 있습니다.");
             return;
         }
 

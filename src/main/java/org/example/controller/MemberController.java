@@ -101,10 +101,10 @@ public class MemberController {
                 System.out.println(Controller.loginedMember.getName()+"님 로그인 되었습니다.");
                 return;
             }
-            System.out.println("로그인 되지 않았습니다. 아이디와 비밀번호를 확인해주세요.");
+            System.out.printf("로그인 되지 않았습니다. \n아이디와 비밀번호를 확인해주세요.(%d / 3)\n",i);
 
         }
-        System.out.println("로그인 시도 횟수를 초과했습니다. 다시 확인하시고 로그인해주세요");
+        System.out.println("로그인 시도 횟수를 초과했습니다. \n다시 확인하시고 로그인해주세요");
 
 
     }

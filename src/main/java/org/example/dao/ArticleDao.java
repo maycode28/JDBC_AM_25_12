@@ -50,7 +50,7 @@ public class ArticleDao {
     public Map<String, Object> getArticleById(int id) {
         SecSql sql = new SecSql();
 
-        sql.append("SELECT a.id,a.regDate,a.updateDate,a.title,a.body,m.name");
+        sql.append("SELECT a.id,a.regDate,a.updateDate,a.title,a.body,a.authorId,m.name");
         sql.append("FROM article a");
         sql.append("INNER JOIN `member` m");
         sql.append("ON a.authorId = m.Id");
