@@ -35,14 +35,36 @@ public class ArticleController {
         System.out.println(id + "번 글이 생성됨");
     }
 
-    public void showList() {
+    public void showList(String cmd) {
         System.out.println("==목록==");
 
-        List<Article> articles = articleService.getArticles();
+        if (cmd.split(" ").length == 2) {
+            List<Article> articles = articleService.getArticles();
 
+
+            if (articles.size() == 0) {
+                System.out.println("게시글이 없습니다");
+                return;
+            }
+
+            System.out.println("  번호  /   제목  /  작성자");
+            for (Article article : articles) {
+                System.out.printf("  %d     /   %s   /   %s   \n", article.getId(), article.getTitle(), article.getAuthorName());
+            }
+            return;
+
+        }else if (cmd.split(" ").length > 3) {
+            System.out.println("검색어를 확인하세요.");
+        }
+        String search = cmd.split(" ")[2];
+
+        List<Article> articles = articleService.getArticles(search);
+
+
+        System.out.println("검색어 : "+search);
 
         if (articles.size() == 0) {
-            System.out.println("게시글이 없습니다");
+            System.out.println("해당하는 게시글이 없습니다");
             return;
         }
 

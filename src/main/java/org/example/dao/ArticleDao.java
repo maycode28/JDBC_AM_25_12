@@ -46,6 +46,24 @@ public class ArticleDao {
         }
         return articles;
     }
+    public List<Article> getArticles(String search) {
+        SecSql sql = new SecSql();
+        sql.append("SELECT a.id,a.regDate,a.updateDate,a.title,a.body,m.name");
+        sql.append("FROM article a");
+        sql.append("INNER JOIN `member` m");
+        sql.append("ON a.authorId = m.Id");
+        sql.append("WHERE a.title LIKE '%"+search+"%'");
+        sql.append("ORDER BY id DESC;");
+
+        List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
+
+        List<Article> articles = new ArrayList<>();
+
+        for (Map<String, Object> articleMap : articleListMap) {
+            articles.add(new Article(articleMap));
+        }
+        return articles;
+    }
 
     public Map<String, Object> getArticleById(int id) {
         SecSql sql = new SecSql();

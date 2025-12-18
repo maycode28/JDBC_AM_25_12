@@ -94,8 +94,8 @@ public class App {
                 return 0;
             }
             articleController.doWrite();
-        } else if (cmd.equals("article list")) {
-            articleController.showList();
+        } else if (cmd.startsWith("article list")) {
+            articleController.showList(cmd);
         } else if (cmd.startsWith("article modify")) {
             if (!Controller.isLogined()){
                 System.out.println("로그인이 필요합니다.");
