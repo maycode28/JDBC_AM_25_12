@@ -20,11 +20,18 @@ public class ArticleService {
 
     }
 
-    public List<Article> getArticles() {
-        return articleDao.getArticles();
+    public int getArticlesCount() {
+        return articleDao.getArticlesCount();
     }
-    public List<Article> getArticles(String search) {
-        return articleDao.getArticles(search);
+    public int getArticlesCount(String search) {
+        return articleDao.getArticlesCount(search);
+    }
+
+    public List<Article> getArticles(int pageNo) {
+        return articleDao.getArticles(pageNo);
+    }
+    public List<Article> getArticles(int pageNo, String search) {
+        return articleDao.getArticles(pageNo, search);
     }
 
     public Map<String, Object> getArticleById(int id) {

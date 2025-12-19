@@ -28,14 +28,26 @@ public class ArticleDao {
 
         return DBUtil.insert(conn, sql);
     }
+    public int getArticlesCount() {
+        SecSql sql = new SecSql();
+        sql.append("SELECT count(*) FROM article;");
+        return DBUtil.selectRowIntValue(conn, sql);
+    }
+    public int getArticlesCount(String search) {
+        SecSql sql = new SecSql();
+        sql.append("SELECT count(*) FROM article");
+        sql.append("WHERE title LIKE '%"+search+"%';");
+        return DBUtil.selectRowIntValue(conn, sql);
+    }
 
-    public List<Article> getArticles() {
+    public List<Article> getArticles(int pageNo) {
         SecSql sql = new SecSql();
         sql.append("SELECT a.id,a.regDate,a.updateDate,a.title,a.body,m.name");
         sql.append("FROM article a");
         sql.append("INNER JOIN `member` m");
         sql.append("ON a.authorId = m.Id");
         sql.append("ORDER BY id DESC");
+        sql.append("LIMIT ?,10;", pageNo*10);
 
         List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
 
@@ -46,14 +58,15 @@ public class ArticleDao {
         }
         return articles;
     }
-    public List<Article> getArticles(String search) {
+    public List<Article> getArticles(int pageNo, String search) {
         SecSql sql = new SecSql();
         sql.append("SELECT a.id,a.regDate,a.updateDate,a.title,a.body,m.name");
         sql.append("FROM article a");
         sql.append("INNER JOIN `member` m");
         sql.append("ON a.authorId = m.Id");
         sql.append("WHERE a.title LIKE '%"+search+"%'");
-        sql.append("ORDER BY id DESC;");
+        sql.append("ORDER BY id DESC");
+        sql.append("LIMIT ?,10;", pageNo*10);
 
         List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
 

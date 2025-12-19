@@ -37,9 +37,13 @@ public class ArticleController {
 
     public void showList(String cmd) {
         System.out.println("==목록==");
+        int pageNo = 0;
+        int articleCount = articleService.getArticlesCount();
+        int totalPage = (articleCount%10==0) ? articleCount/10-1 : articleCount/10;
+
 
         if (cmd.split(" ").length == 2) {
-            List<Article> articles = articleService.getArticles();
+            List<Article> articles = articleService.getArticles(pageNo);
 
 
             if (articles.size() == 0) {
@@ -47,10 +51,40 @@ public class ArticleController {
                 return;
             }
 
-            System.out.println("  번호  /   제목  /  작성자");
-            for (Article article : articles) {
-                System.out.printf("  %d     /   %s   /   %s   \n", article.getId(), article.getTitle(), article.getAuthorName());
+            while (true){
+                System.out.println("  번호  /   제목  /  작성자");
+
+                for (Article article : articles) {
+                    System.out.printf("  %d     /   %s   /   %s   \n", article.getId(), article.getTitle(), article.getAuthorName());
+                }
+                if (pageNo==0){
+                    System.out.println("다음페이지 또는 나가기를 입력하세요");
+                } else if (pageNo==totalPage) {
+                    System.out.println("이전페이지 또는 나가기를 입력하세요");
+                } else  {
+                    System.out.println("이전페이지 또는 다음페이지 또는 나가기를 입력하세요");
+                }
+                String input = sc.nextLine();
+                if (input.equals("이전페이지")){
+                    if (pageNo==0){
+                        System.out.println("이전페이지가 없습니다");
+                    }else {
+                        articles = articleService.getArticles(--pageNo);
+                    }
+                }else if(input.equals("다음페이지")){
+                    if (pageNo==totalPage){
+                        System.out.println("다음페이지가 없습니다");
+                    }else {
+                        articles = articleService.getArticles(++pageNo);
+                    }
+                }else if(input.equals("나가기")){
+                    break;
+                }else {
+                    System.out.println("잘못 입력하셨습니다.");
+                }
+
             }
+
             return;
 
         }else if (cmd.split(" ").length > 3) {
@@ -58,20 +92,52 @@ public class ArticleController {
         }
         String search = cmd.split(" ")[2];
 
-        List<Article> articles = articleService.getArticles(search);
+        List<Article> articles = articleService.getArticles(pageNo,search);
+        articleCount = articleService.getArticlesCount(search);
+        totalPage = (articleCount%10==0) ? articleCount/10-1 : articleCount/10;
 
 
-        System.out.println("검색어 : "+search);
 
         if (articles.size() == 0) {
+            System.out.println("검색어 : "+search);
             System.out.println("해당하는 게시글이 없습니다");
             return;
         }
+        while (true){
+            System.out.println("검색어 : "+search);
+            System.out.println("  번호  /   제목  /  작성자");
 
-        System.out.println("  번호  /   제목  /  작성자");
-        for (Article article : articles) {
-            System.out.printf("  %d     /   %s   /   %s   \n", article.getId(), article.getTitle(), article.getAuthorName());
+            for (Article article : articles) {
+                System.out.printf("  %d     /   %s   /   %s   \n", article.getId(), article.getTitle(), article.getAuthorName());
+            }
+            if (pageNo==0){
+                System.out.println("다음페이지 또는 나가기를 입력하세요");
+            } else if (pageNo==totalPage) {
+                System.out.println("이전페이지 또는 나가기를 입력하세요");
+            } else  {
+                System.out.println("이전페이지 또는 다음페이지 또는 나가기를 입력하세요");
+            }
+            String input = sc.nextLine();
+            if (input.equals("이전페이지")){
+                if (pageNo==0){
+                    System.out.println("이전페이지가 없습니다");
+                }else {
+                    articles = articleService.getArticles(--pageNo,search);
+                }
+            }else if(input.equals("다음페이지")){
+                if (pageNo==totalPage){
+                    System.out.println("다음페이지가 없습니다");
+                }else {
+                    articles = articleService.getArticles(++pageNo,search);
+                }
+            }else if(input.equals("나가기")){
+                break;
+            }else {
+                System.out.println("잘못 입력하셨습니다.");
+            }
+
         }
+
     }
 
     public void doModify(String cmd) {
